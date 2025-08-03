@@ -166,6 +166,26 @@ body {
   color: white;
 }
 
+#musicButton {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    padding: 10px 16px;
+    border: 2px solid rgba(0, 200, 255, 0.531);
+    background: rgba(29, 97, 186, 0.276);
+    color: rgb(210, 210, 224);
+    font-size: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito Sans", sans-serif; 
+}
+
+#musicButton:hover {
+    background-color: transparent;
+}
+
 /* RESPONSIVE */
 
 @media screen and (max-width: 768px) {

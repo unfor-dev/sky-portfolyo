@@ -274,7 +274,7 @@ export const Experience = () => {
   const scroll = useScroll();
   const lastScroll = useRef(0);
 
-  const { play, setHasScroll, end, setEnd } = usePlay();
+  const { play, setHasScroll } = usePlay();
 
   useFrame((_state, delta) => {
     if (window.innerWidth > window.innerHeight) {
@@ -291,7 +291,7 @@ export const Experience = () => {
       setHasScroll(true);
     }
 
-    if (play && !end && sceneOpacity.current < 1) {
+    if (play&& sceneOpacity.current < 1) {
       sceneOpacity.current = THREE.MathUtils.lerp(
         sceneOpacity.current,
         1,
@@ -299,7 +299,7 @@ export const Experience = () => {
       );
     }
 
-    if (end && sceneOpacity.current > 0) {
+    if (sceneOpacity.current > 0) {
       sceneOpacity.current = THREE.MathUtils.lerp(
         sceneOpacity.current,
         0,
@@ -309,9 +309,6 @@ export const Experience = () => {
 
     lineMaterialRef.current.opacity = sceneOpacity.current;
 
-    if (end) {
-      return;
-    }
 
     const scrollOffset = Math.max(0, scroll.offset);
 
@@ -414,13 +411,6 @@ export const Experience = () => {
     );
     airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
-    if (
-      cameraGroup.current.position.z <
-      curvePoints[curvePoints.length - 1].z + 100
-    ) {
-      setEnd(true);
-      planeOutTl.current.play();
-    }
   });
 
   const airplane = useRef();
@@ -517,9 +507,9 @@ useLayoutEffect(() => {
             />
           </group>
           <group ref={airplane}>
-            <Float floatIntensity={1} speed={1} rotationIntensity={0.5}>
+            <Float floatIntensity={0.5} speed={0.7} rotationIntensity={0.3}>
               <Airplane
-                rotation={[0.1, 4.75, 0]}
+                rotation={[0.1, 4.70, 0]}
                 scale={[0.2, 0.2, 0.2]}
                 position-y={-0.3}
               />
@@ -563,3 +553,22 @@ useLayoutEffect(() => {
     []
   );
 };
+
+/**
+ * Music toggle button
+ */
+const audio = document.getElementById('backgroundMusic')
+const musicButton = document.getElementById('musicButton')
+let isPlaying = false
+
+musicButton.addEventListener('click', () => {
+    if (!isPlaying) {
+        audio.play()
+        musicButton.textContent = 'Pause'
+        isPlaying = true
+    } else {
+        audio.pause()
+        musicButton.textContent = 'Play'
+        isPlaying = false
+    }
+})
