@@ -42,50 +42,49 @@ export const Experience = () => {
   }, []);
 
   const textSections = useMemo(() => {
-    return [
-      {
-        cameraRailDist: -1,
-        position: new Vector3(
-          curvePoints[1].x - 3,
-          curvePoints[1].y,
-          curvePoints[1].z
-        ),
-        subtitle: `Welcome to Unfor's Portfolio,
-Have a seat and enjoy the ride!`,
-      },
-      {
-        cameraRailDist: 1.5,
-        position: new Vector3(
-          curvePoints[2].x + 2,
-          curvePoints[2].y,
-          curvePoints[2].z
-        ),
-        title: "Services",
-        subtitle: `Do you want a drink?
-We have a wide range of beverages!`,
-      },
-      {
-        cameraRailDist: -1,
-        position: new Vector3(
-          curvePoints[3].x - 3,
-          curvePoints[3].y,
-          curvePoints[3].z
-        ),
-        title: "Fear of flying?",
-        subtitle: `Our flight attendants will help you have a great journey`,
-      },
-      {
-        cameraRailDist: 1.5,
-        position: new Vector3(
-          curvePoints[4].x + 3.5,
-          curvePoints[4].y,
-          curvePoints[4].z - 12
-        ),
-        title: "Movies",
-        subtitle: `We provide a large selection of medias, we highly recommend you Porco Rosso during the flight`,
-      },
-    ];
-  }, []);
+  return [
+    {
+      cameraRailDist: -1,
+      position: new Vector3(
+        curvePoints[1].x - 3,
+        curvePoints[1].y,
+        curvePoints[1].z
+      ),
+      subtitle: `Welcome aboard Flight Unfor-3D! Fasten your seatbelt and prepare for takeoff.`,
+    },
+    {
+      cameraRailDist: 1.5,
+      position: new Vector3(
+        curvePoints[2].x + 2,
+        curvePoints[2].y,
+        curvePoints[2].z
+      ),
+      title: "Cruising Altitude",
+      subtitle: `Navigating the skies of 3D with Three.js, R3F, and GSAP. Where design meets technology — smoothly.`,
+    },
+    {
+      cameraRailDist: -1,
+      position: new Vector3(
+        curvePoints[3].x - 3,
+        curvePoints[3].y,
+        curvePoints[3].z
+      ),
+      title: "Turbulence-Free Precision",
+      subtitle: `Every pixel is calibrated. Every movement — engineered for visual flight control.`,
+    },
+    {
+      cameraRailDist: 1.5,
+      position: new Vector3(
+        curvePoints[4].x + 3.5,
+        curvePoints[4].y,
+        curvePoints[4].z - 12
+      ),
+      title: "Landing New Projects",
+      subtitle: `Ready for arrival at your next big idea? Let’s co-pilot your vision into a high-flying experience.`,
+    },
+  ];
+}, []);
+
 
   const clouds = useMemo(
     () => [
@@ -427,68 +426,74 @@ We have a wide range of beverages!`,
   const airplane = useRef();
 
   const tl = useRef();
-  const backgroundColors = useRef({
-    colorA: "#3535cc",
-    colorB: "#abaadd",
+const backgroundColors = useRef({
+  colorA: "#001f3f",  // Deep blue sky at night
+  colorB: "#0074D9",  // Twilight blue
+});
+
+const planeInTl = useRef();
+const planeOutTl = useRef();
+
+useLayoutEffect(() => {
+  tl.current = gsap.timeline();
+
+  // 1. Sunrise – iliq va yorqin
+  tl.current.to(backgroundColors.current, {
+    duration: 1,
+    colorA: "#ff5e62", // Sunrise red
+    colorB: "#ff9966", // Orange gradient
   });
 
-  const planeInTl = useRef();
-  const planeOutTl = useRef();
+  // 2. Clear sky – pokiza havo
+  tl.current.to(backgroundColors.current, {
+    duration: 1,
+    colorA: "#00c6ff", // Light cyan blue
+    colorB: "#0072ff", // Sky blue
+  });
 
-  useLayoutEffect(() => {
-    tl.current = gsap.timeline();
+  // 3. Sunset – sokin parvoz ohanglari
+  tl.current.to(backgroundColors.current, {
+    duration: 1,
+    colorA: "#001f3f",  // Deep blue sky at night
+    colorB: "#0074D9", // Orange-red
+  });
 
-    tl.current.to(backgroundColors.current, {
-      duration: 1,
-      colorA: "#6f35cc",
-      colorB: "#ffad30",
-    });
-    tl.current.to(backgroundColors.current, {
-      duration: 1,
-      colorA: "#424242",
-      colorB: "#ffcc00",
-    });
-    tl.current.to(backgroundColors.current, {
-      duration: 1,
-      colorA: "#81318b",
-      colorB: "#55ab8f",
-    });
+  tl.current.pause();
 
-    tl.current.pause();
+  planeInTl.current = gsap.timeline();
+  planeInTl.current.pause();
+  planeInTl.current.from(airplane.current.position, {
+    duration: 3,
+    z: 5,
+    y: -2,
+  });
 
-    planeInTl.current = gsap.timeline();
-    planeInTl.current.pause();
-    planeInTl.current.from(airplane.current.position, {
-      duration: 3,
-      z: 5,
-      y: -2,
-    });
+  planeOutTl.current = gsap.timeline();
+  planeOutTl.current.pause();
 
-    planeOutTl.current = gsap.timeline();
-    planeOutTl.current.pause();
+  planeOutTl.current.to(
+    airplane.current.position,
+    {
+      duration: 10,
+      z: -250,
+      y: 10,
+    },
+    0
+  );
+  planeOutTl.current.to(
+    cameraRail.current.position,
+    {
+      duration: 8,
+      y: 12,
+    },
+    0
+  );
+  planeOutTl.current.to(airplane.current.position, {
+    duration: 1,
+    z: -1000,
+  });
+}, []);
 
-    planeOutTl.current.to(
-      airplane.current.position,
-      {
-        duration: 10,
-        z: -250,
-        y: 10,
-      },
-      0
-    );
-    planeOutTl.current.to(
-      cameraRail.current.position,
-      {
-        duration: 8,
-        y: 12,
-      },
-      0
-    );
-    planeOutTl.current.to(airplane.current.position, {
-      duration: 1,
-      z: -1000,
-    });
-  }, []);
 
   useEffect(() => {
     if (play) {
@@ -512,11 +517,11 @@ We have a wide range of beverages!`,
             />
           </group>
           <group ref={airplane}>
-            <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
+            <Float floatIntensity={1} speed={1} rotationIntensity={0.5}>
               <Airplane
-                rotation-y={Math.PI / 2}
+                rotation={[0.1, 4.75, 0]}
                 scale={[0.2, 0.2, 0.2]}
-                position-y={0.1}
+                position-y={-0.3}
               />
             </Float>
           </group>
